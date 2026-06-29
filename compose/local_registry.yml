@@ -1,0 +1,11 @@
+# Local Docker registry for mirroring T-Pot images.
+# Start with: docker compose -f compose/local_registry.yml up -d
+services:
+  local_registry:
+    image: registry:2
+    container_name: local_registry
+    restart: unless-stopped
+    ports:
+      - "${LOCAL_REGISTRY_BIND:-127.0.0.1:5000}:5000"
+    volumes:
+      - "${LOCAL_REGISTRY_DATA:-./data/local_registry}:/var/lib/registry"
