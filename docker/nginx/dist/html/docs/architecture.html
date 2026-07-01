@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../assets/js/clock.js" defer
+        integrity="sha384-ymJnuq0yExd1vCEQFQAvYDv0IWfHL1XJYSRt2nyK73ofjF6GzG5baOjLN1dLkGLI"
+        crossorigin="anonymous"></script>
+    <title>معماری سراب</title>
+    <style>
+
+        @font-face {
+            font-family: 'Titr';
+            src: url('../assets/fonts/titr.ttf') format('truetype');
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            min-height: 100%;
+            background: #020d1a;
+            color: rgba(255, 255, 255, 0.86);
+            font-family: 'Titr', Tahoma, sans-serif !important;
+        }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            background: url('../assets/img/sarab.png') center/cover no-repeat;
+            filter: brightness(0.34) saturate(1.2);
+            z-index: 0;
+        }
+
+        .bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(2, 13, 26, 0.25) 0%,
+                    rgba(2, 13, 26, 0.78) 42%,
+                    rgba(2, 13, 26, 0.96) 100%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.12), transparent);
+            z-index: 2;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 40px;
+            background: linear-gradient(to bottom, rgba(2, 13, 26, 0.9), transparent);
+            direction: ltr;
+        }
+
+        .brand {
+            font-family: monospace;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .brand span {
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        #clock {
+            font-family: monospace;
+            font-size: 36px;
+            color: #00d4ff;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+        }
+
+        .version-tag {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: rgba(0, 212, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .page {
+            position: relative;
+            z-index: 5;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 130px 0 56px;
+        }
+
+        .hero-card,
+        .doc-card {
+            position: relative;
+            background: rgba(0, 212, 255, 0.045);
+            border: 1px solid rgba(0, 212, 255, 0.16);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.08), inset 0 0 30px rgba(0, 212, 255, 0.025);
+        }
+
+        .hero-card {
+            padding: 42px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: rgba(0, 212, 255, 0.66);
+            text-transform: uppercase;
+            direction: ltr;
+            text-align: right;
+        }
+
+        h1 {
+            font-family: 'Titr', 'Titr', Tahoma, sans-serif;
+            font-size: clamp(42px, 7vw, 82px);
+            color: #fff;
+            margin: 10px 0 18px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.55);
+        }
+
+        h1 span,
+        h2 span {
+            color: #00d4ff;
+        }
+
+        .lead {
+            max-width: 930px;
+            font-size: 19px;
+            line-height: 2.1;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .doc-card {
+            padding: 28px;
+        }
+
+        .wide {
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            font-family: 'Titr', 'Titr', Tahoma, sans-serif;
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 19px;
+            color: #00d4ff;
+            margin: 20px 0 8px;
+        }
+
+        p,
+        li {
+            font-size: 16px;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        ul,
+        ol {
+            padding-right: 22px;
+        }
+
+        .flow {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+            direction: rtl;
+        }
+
+        .flow-step {
+            min-height: 124px;
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            border-radius: 16px;
+            padding: 18px 14px;
+            background: rgba(0, 212, 255, 0.045);
+        }
+
+        .flow-step strong {
+            display: block;
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .matrix-item {
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .matrix-item strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            direction: ltr;
+        }
+
+        .back-link {
+            color: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            border-radius: 999px;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: color 0.25s, border-color 0.25s, background 0.25s;
+        }
+
+        .back-link:hover {
+            color: #00d4ff;
+            border-color: rgba(0, 212, 255, 0.55);
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        @media (max-width: 980px) {
+            .grid,
+            .matrix,
+            .flow {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .header {
+                position: absolute;
+                padding: 20px;
+            }
+
+            #clock {
+                font-size: 26px;
+            }
+
+            .page {
+                width: min(100% - 24px, 1180px);
+                padding-top: 112px;
+            }
+
+            .hero-card {
+                padding: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="scanline"></div>
+
+    <header class="header">
+        <div class="brand">S<span>A</span>RAB</div>
+        <div class="header-right">
+            <div id="clock"></div>
+            <div class="version-tag">Honeypot Platform · v1.0</div>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="hero-card">
+            <div class="eyebrow">Architecture Review</div>
+            <h1>مرور معماری <span>سراب</span></h1>
+            <p class="lead">
+                معماری سراب بر پایه سرویس‌های کانتینری، جداسازی شبکه‌ای، مسیر جمع‌آوری لاگ و لایه نمایش متمرکز ساخته شده است. هر هانی‌پات در کانتینر مستقل اجرا می‌شود، رخدادها به Logstash و Elasticsearch می‌رسند و کاربر از طریق NGINX به Kibana، نقشه حملات و ابزارهای کمکی دسترسی پیدا می‌کند.
+            </p>
+        </section>
+
+        <section class="grid">
+            <article class="doc-card wide">
+                <h2>جریان داده در سامانه</h2>
+                <div class="flow">
+                    <div class="flow-step">
+                        <strong>۱. تماس مهاجم</strong>
+                        ترافیک ورودی به پورت‌های سرویس‌های فریبنده می‌رسد؛ این تماس می‌تواند اسکن، brute force، exploit یا ارسال payload باشد.
+                    </div>
+                    <div class="flow-step">
+                        <strong>۲. تعامل هانی‌پات</strong>
+                        کانتینر مربوطه پاسخ کنترل‌شده می‌دهد و جزئیات نشست، فرمان، credential یا فایل را ثبت می‌کند.
+                    </div>
+                    <div class="flow-step">
+                        <strong>۳. جمع‌آوری</strong>
+                        Logstash رخدادها را دریافت، parse، عادی‌سازی و با فیلدهایی مثل نوع هانی‌پات، IP و زمان غنی‌سازی می‌کند.
+                    </div>
+                    <div class="flow-step">
+                        <strong>۴. ذخیره‌سازی</strong>
+                        Elasticsearch رخدادها را در indexهای قابل جست‌وجو ذخیره می‌کند تا dashboard، query و تحلیل روند امکان‌پذیر باشد.
+                    </div>
+                    <div class="flow-step">
+                        <strong>۵. نمایش و تحلیل</strong>
+                        Kibana، Attack Map، Elasticvue، CyberChef و SpiderFoot داده را برای تحلیل عملیاتی و گزارش‌گیری ارائه می‌کنند.
+                    </div>
+                </div>
+            </article>
+
+            <article class="doc-card">
+                <h2>لایه‌های اصلی</h2>
+                <h3>لایه فریب</h3>
+                <p>هانی‌پات‌ها سرویس‌های واقعی‌نما را اجرا می‌کنند اما دارایی حساس ندارند. هدف این لایه جذب رفتار مهاجم، کند کردن اسکن‌های خودکار و تولید داده قابل تحلیل است.</p>
+                <h3>لایه پردازش</h3>
+                <p>Logstash، parserها و pipelineهای لاگ، رخدادهای ناهمگون را به ساختاری مشترک تبدیل می‌کنند تا تحلیل بین چند سرویس ساده شود.</p>
+                <h3>لایه مشاهده</h3>
+                <p>Elasticsearch و Kibana هسته جست‌وجو و visualization هستند و ابزارهای جانبی برای نقشه زنده، بررسی index و تحلیل داده خام در کنار آن‌ها قرار می‌گیرند.</p>
+            </article>
+
+            <article class="doc-card">
+                <h2>نقش سرویس‌های پشتیبان</h2>
+                <ul>
+                    <li><strong>tpotinit:</strong> آماده‌سازی محیط، تنظیمات اولیه و هماهنگی فایل‌های runtime.</li>
+                    <li><strong>NGINX:</strong> reverse proxy برای دسترسی امن به رابط‌ها و دریافت داده در سناریوهای توزیع‌شده.</li>
+                    <li><strong>map_redis، map_web و map_data:</strong> تولید و نمایش نقشه زنده رخدادهای هانی‌پات.</li>
+                    <li><strong>ewsposter:</strong> سرویس ارسال یا همگام‌سازی اختیاری رخدادها بسته به پیکربندی نصب.</li>
+                    <li><strong>auto-heal و healthcheckها:</strong> کمک به پایدار ماندن کانتینرها در اجرای بلندمدت.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card wide">
+                <h2>پروفایل‌های استقرار</h2>
+                <div class="matrix">
+                    <div class="matrix-item">
+                        <strong>Standard</strong>
+                        مناسب نصب کامل روی سرور یا VM؛ شامل هانی‌پات‌های اصلی، Elastic Stack، نقشه، NGINX و ابزارهای تحلیلی.
+                    </div>
+                    <div class="matrix-item">
+                        <strong>Sensor</strong>
+                        برای سنسورهای توزیع‌شده؛ تمرکز روی جمع‌آوری رخداد و ارسال به هسته مرکزی با مصرف کمتر از نصب کامل.
+                    </div>
+                    <div class="matrix-item">
+                        <strong>Mini</strong>
+                        نسخه سبک‌تر برای منابع محدود یا سناریوهایی که فقط بخشی از سرویس‌ها لازم است.
+                    </div>
+                    <div class="matrix-item">
+                        <strong>Mobile</strong>
+                        پروفایلی برای محیط‌های محدودتر یا قابل‌حمل که بیشتر روی هانی‌پات و جمع‌آوری لاگ تمرکز دارد.
+                    </div>
+                    <div class="matrix-item">
+                        <strong>Tarpit</strong>
+                        مناسب گیر انداختن اسکنرها و بات‌ها با سرویس‌هایی مانند Endlessh، DDoSPot و HellPot.
+                    </div>
+                    <div class="matrix-item">
+                        <strong>LLM</strong>
+                        سناریوهای فریب مبتنی بر مدل زبانی و تعاملات وب هوشمندتر با سرویس‌هایی مانند Beelzebub و Galah.
+                    </div>
+                </div>
+            </article>
+
+            <article class="doc-card">
+                <h2>ملاحظات امنیتی</h2>
+                <ul>
+                    <li>هانی‌پات را در شبکه‌ای جدا از دارایی‌های حساس قرار دهید و مسیر خروجی آن را کنترل کنید.</li>
+                    <li>برای رابط‌های مدیریتی از احراز هویت قوی، محدودسازی IP و به‌روزرسانی منظم استفاده کنید.</li>
+                    <li>لاگ‌ها ممکن است شامل payload، بدافزار یا credentialهای واقعی باشند؛ دسترسی و نگهداری آن‌ها را مدیریت کنید.</li>
+                    <li>پورت‌های در معرض اینترنت را مطابق پروفایل انتخابی باز کنید و از تداخل با سرویس‌های واقعی جلوگیری کنید.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card">
+                <h2>نکات عملیاتی</h2>
+                <ul>
+                    <li>برای نصب کامل، منابع RAM و دیسک را بر اساس حجم حملات و مدت نگهداری لاگ در نظر بگیرید.</li>
+                    <li>داشبوردها را با فیلتر نوع هانی‌پات، کشور، پورت و بازه زمانی برای تحلیل سریع‌تر تنظیم کنید.</li>
+                    <li>از CyberChef برای decode کردن payloadها و از SpiderFoot برای غنی‌سازی IP یا دامنه استفاده کنید.</li>
+                    <li>هشدارهای Suricata را کنار لاگ هانی‌پات بررسی کنید تا تصویر شبکه‌ای و برنامه‌ای یک رخداد کامل شود.</li>
+                </ul>
+            </article>
+        </section>
+
+        <div class="footer-actions">
+            <a class="back-link" href="../index.html">Back Home</a>
+            <a class="back-link" href="introduction.html">Introduction</a>
+        </div>
+    </main>
+</body>
+
+</html>

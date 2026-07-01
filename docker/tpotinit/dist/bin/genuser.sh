@@ -5,7 +5,7 @@ myTPOT_CONF_FILE=/data/.env
 WEB_USER=$(grep "^WEB_USER=" "${myTPOT_CONF_FILE}" | sed 's/^WEB_USER=//g' | tr -d "\"'")
 
 myPW=$(cat << "EOF"
-__        __   _     _   _  [ T-Pot ]
+__        __   _     _   _  [ Sarab ]
 \ \      / /__| |__ | | | |___  ___ _ __
  \ \ /\ / / _ \ '_ \| | | / __|/ _ \ '__|
   \ V  V /  __/ |_) | |_| \__ \  __/ |

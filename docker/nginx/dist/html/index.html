@@ -1,163 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'">
     <meta charset="UTF-8">
-    <!--Setup Font Awesome-->
     <link href="assets/fonts/awesome/css/all.css" rel="stylesheet">
-    <!--Setup Particles, Particles Conf, Clock-->
-    <!-- Check integrity: openssl dgst -sha384 -binary your.file.name | openssl base64 -A-->
-    <script src="assets/js/particles.min.js" defer integrity="sha384-d+UOwmNNIC7V4izkTAKSXzWhjC2GxiS9PTykO1XdOPC3nc2z65UOS7SP6QdKPA70" crossorigin="anonymous"></script>
-    <script src="assets/js/particles_conf.js" defer integrity="sha384-0191YAiOrh905UCYh44ZxeO+pKbvuEOIDEmo3F6qHKDL8FO8s66r6P2w8NGMWp7I" crossorigin="anonymous"></script>
-    <script src="assets/js/clock.js" defer integrity="sha384-ymJnuq0yExd1vCEQFQAvYDv0IWfHL1XJYSRt2nyK73ofjF6GzG5baOjLN1dLkGLI" crossorigin="anonymous"></script>
-
-    <title>T-Pot</title>
+    <script src="assets/js/clock.js" defer
+        integrity="sha384-ymJnuq0yExd1vCEQFQAvYDv0IWfHL1XJYSRt2nyK73ofjF6GzG5baOjLN1dLkGLI"
+        crossorigin="anonymous"></script>
+    <title>Sarab</title>
     <style>
-        /* russo-one-regular - latin */
         @font-face {
-          font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-          font-family: 'Russo One';
-          font-style: normal;
-          font-weight: 400;
-          src: url('assets/fonts/russo-one-v16-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+            font-family: 'Snapp';
+            src: url('./assets/fonts/Snapp.ttf') format('truetype');
         }
-        body, html {
+        @font-face {
+            font-family: 'Titr';
+            src: url('./assets/fonts/titr.ttf') format('truetype');
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body,
+        html {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            background-color: #000;
-            font-family: 'Russo One', normal;
+            background: #020d1a;
+            font-family: 'Snapp', Tahoma, sans-serif;
         }
-        .header-container {
+
+        /* Background image */
+        .bg {
+            position: fixed;
+            inset: 0;
+            background: url('assets/img/sarab.png') center/cover no-repeat;
+            filter: brightness(0.45) saturate(1.2);
+            z-index: 0;
+        }
+
+        /* Gradient overlay for depth */
+        .bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(2, 13, 26, 0.3) 0%,
+                    rgba(2, 13, 26, 0.1) 40%,
+                    rgba(2, 13, 26, 0.7) 100%);
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: absolute;
-            top: 0px;
-            left: 20px;
-            right: 20px;
+            padding: 24px 40px;
+            background: linear-gradient(to bottom, rgba(2, 13, 26, 0.8), transparent);
         }
-        .clock-container, .dynamic-text {
-            color: #e20074;
-            font-size: 72px;
+
+        .brand {
+            font-family: monospace;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #fff;
+            text-transform: uppercase;
         }
-        .dynamic-text {
-            text-align: right;
+
+        .brand span {
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
         }
-        .logo-container {
-            width: 100%;
-            display: flex;
-            justify-content: flex-end;
-            position: absolute;
-            top: 45%;
-            transform: translateY(-50%);
-        }
-        .logo {
-            width: 25vw;
-            height: auto;
-            position: relative;
-            opacity: 0.9;
-            right: 10%;
-            z-index: 1;
-        }
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-        .boxes-container {
-            display: flex;
-            justify-content: flex-start;
-            position: absolute;
-            bottom: 50px;
-            left: 20px;
-            padding: 0 20px;
-        }
-        .link-box {
-            margin: 0 10px;
-            padding: 20px;
-            padding-top: 60px;
-            background: rgba(51, 51, 51, 0.3);
-            border-radius: 20px;
-            text-align: center;
-            transition: box-shadow 0.5s ease;
-            z-index: 10;
-            box-sizing: border-box;
-            position: relative;
-            width: 400px; /* Adjust as needed */
-            min-height: 500px;
-            max-width: 100%;
+
+        .header-right {
             display: flex;
             flex-direction: column;
-            justify-content: top;
-            align-items: center;
+            align-items: flex-end;
+            gap: 4px;
         }
-        .links-box::before, .tools-box::before {
-            font-family: 'FontAwesome';
-            content: attr(data-caption);
-            position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: transparent;
-            color: #FFF;
-            padding: 0 10px;
+
+        #clock {
+            font-family: monospace;
             font-size: 36px;
-            white-space: nowrap;
+            font-weight: 400;
+            color: #00d4ff;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
         }
+
+        .version-tag {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: rgba(0, 212, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        /* Main content */
+        .main {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 40px 50px;
+        }
+
+        /* Center hero text */
+        .hero {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Snapp', sans-serif;
+            font-size: 120px;
+            font-weight: 700;
+            letter-spacing: 20px;
+            color: #fff;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+        }
+
+        .hero-title span {
+            color: #00d4ff;
+            text-shadow: 0 0 50px rgba(0, 212, 255, 1);
+        }
+
+        .hero-tagline {
+            font-family: 'Titr', sans-serif;
+            font-size: 24px;
+            font-weight: 300;
+            color: rgba(0, 212, 255, 0.8);
+            text-transform: uppercase;
+        }
+
+        /* Boxes */
+        .boxes-container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .link-box {
+            position: relative;
+            padding: 32px 28px 28px;
+            background: rgba(0, 212, 255, 0.04);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 280px;
+            transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
+        }
+
         .link-box:hover {
-            box-shadow: 0 0 15px 5px rgba(226, 0, 116, 0.6);
-            background: rgba(51, 51, 51, 0.3);
+            border-color: rgba(0, 212, 255, 0.5);
+            background: rgba(0, 212, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.15), inset 0 0 30px rgba(0, 212, 255, 0.03);
         }
-        .link-box:hover::before {
-            color: #e20074;
-            transition: color 0.5s ease;
+
+        .box-title {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(0, 212, 255, 0.6);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .box-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(0, 212, 255, 0.3), transparent);
+        }
+
         .link {
-            display: block;
-            color: #FFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255, 255, 255, 0.75);
             text-decoration: none;
-            margin: 10px 0;
-            font-size: 42px;
-            transition: color 0.5s ease;
+            font-size: 15px;
+            font-weight: 300;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: color 0.3s, padding-left 0.3s;
         }
+
+        .link:last-child {
+            border-bottom: none;
+        }
+
+        .link::before {
+            content: '›';
+            color: #00d4ff;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
         .link:hover {
-            color: #e20074;
+            color: #00d4ff;
+            padding-left: 6px;
+        }
+
+        .link:hover::before {
+            opacity: 1;
+        }
+
+        /* Scan line animation */
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.1), transparent);
+            z-index: 2;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+
+        /* Corner decoration */
+        .link-box::before,
+        .link-box::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: rgba(0, 212, 255, 0.4);
+            border-style: solid;
+        }
+
+        .link-box::before {
+            top: -1px;
+            left: -1px;
+            border-width: 1px 0 0 1px;
+        }
+
+        .link-box::after {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 1px 1px 0;
         }
     </style>
 </head>
+
 <body>
 
-<div id="particles-js"></div>
+    <div class="bg"></div>
+    <div class="scanline"></div>
 
-<div class="header-container">
-    <div class="clock-container" id="clock"></div>
-    <div class="dynamic-text">T-Pot 24.04.1</div>
-</div>
+    <header class="header">
+        <div class="brand">S<span>A</span>RAB</div>
+        <div class="header-right">
+            <div id="clock"></div>
+            <div class="version-tag">Honeypot Platform · v1.0</div>
+        </div>
+    </header>
 
-<div class="logo-container">
-    <img src="assets/img/logo.webp" alt="T-Pot Logo" class="logo">
-</div>
-
-<div class="boxes-container">
-    <div class="link-box tools-box" data-caption="&#xf085;">
-        <a href="/map/" class="link" target="_blank">Attack Map</a>
-        <a href="/cyberchef/" class="link" target="_blank">Cyberchef</a>
-        <a href="/elasticvue/" class="link" target="_blank">Elasticvue</a>
-        <a href="/kibana/" class="link" target="_blank">Kibana</a>
-        <a href="/spiderfoot/" class="link" target="_blank">Spiderfoot</a>
+    <div class="hero">
+        <div class="hero-title">سر<span>ا</span>ب</div>
+        <div class="hero-tagline">جایی که هر تهدیدی، ردی از خود به‌جا می‌گذارد</div>
     </div>
-    <div class="link-box links-box" data-caption="&#xf0c1;">
-        <a href="https://sicherheitstacho.eu/" class="link" target="_blank">SecurityMeter</a>
-        <a href="https://github.com/telekom-security/tpotce/blob/master/README.md" class="link" target="_blank">T-Pot ReadMe</a>
-        <a href="https://github.com/telekom-security/tpotce/" class="link" target="_blank">T-Pot @ Github</a>
-    </div>
-</div>
+
+    <main class="main">
+        <div class="boxes-container">
+            <div class="link-box">
+                <div class="box-title">Tools</div>
+                <a href="/map/" class="link" target="_blank">Attack Map</a>
+                <a href="/cyberchef/" class="link" target="_blank">Cyberchef</a>
+                <a href="/elasticvue/" class="link" target="_blank">Elasticvue</a>
+                <a href="/kibana/" class="link" target="_blank">Kibana</a>
+                <a href="/spiderfoot/" class="link" target="_blank">Spiderfoot</a>
+            </div>
+            <div class="link-box">
+                <div class="box-title">Resources</div>
+                <a href="docs/introduction.html" class="link">معرفی سراب</a>
+                <a href="docs/introduction.html#honeypots" class="link">توانمندی‌های هانی‌پات</a>
+                <a href="docs/architecture.html" class="link">معماری سراب</a>
+            </div>
+        </div>
+    </main>
+
 </body>
+
 </html>

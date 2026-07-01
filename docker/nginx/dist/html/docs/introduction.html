@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../assets/js/clock.js" defer
+        integrity="sha384-ymJnuq0yExd1vCEQFQAvYDv0IWfHL1XJYSRt2nyK73ofjF6GzG5baOjLN1dLkGLI"
+        crossorigin="anonymous"></script>
+    <title>معرفی سراب</title>
+    <style>
+        @font-face {
+            font-family: 'Titr';
+            src: url('../assets/fonts/titr.ttf') format('truetype');
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            min-height: 100%;
+            background: #020d1a;
+            color: rgba(255, 255, 255, 0.86);
+            font-family: 'Titr', Tahoma, sans-serif;
+        }
+
+        .bg {
+            position: fixed;
+            inset: 0;
+            background: url('../assets/img/sarab.png') center/cover no-repeat;
+            filter: brightness(0.34) saturate(1.2);
+            z-index: 0;
+        }
+
+        .bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom,
+                    rgba(2, 13, 26, 0.25) 0%,
+                    rgba(2, 13, 26, 0.78) 42%,
+                    rgba(2, 13, 26, 0.96) 100%);
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.12), transparent);
+            z-index: 2;
+            animation: scanline 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scanline {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(100vh);
+            }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 40px;
+            background: linear-gradient(to bottom, rgba(2, 13, 26, 0.9), transparent);
+            direction: ltr;
+        }
+
+        .brand {
+            font-family: monospace;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .brand span {
+            color: #00d4ff;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        #clock {
+            font-family: monospace;
+            font-size: 36px;
+            color: #00d4ff;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
+        }
+
+        .version-tag {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: rgba(0, 212, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .page {
+            position: relative;
+            z-index: 5;
+            width: min(1180px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 130px 0 56px;
+        }
+
+        .hero-card,
+        .doc-card {
+            position: relative;
+            background: rgba(0, 212, 255, 0.045);
+            border: 1px solid rgba(0, 212, 255, 0.16);
+            border-radius: 18px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.08), inset 0 0 30px rgba(0, 212, 255, 0.025);
+        }
+
+        .hero-card {
+            padding: 42px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            letter-spacing: 4px;
+            color: rgba(0, 212, 255, 0.66);
+            text-transform: uppercase;
+            direction: ltr;
+            text-align: right;
+        }
+
+        h1 {
+            font-family: 'Titr', 'Titr', Tahoma, sans-serif;
+            font-size: clamp(42px, 7vw, 82px);
+            color: #fff;
+            margin: 10px 0 18px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.55);
+        }
+
+        h1 span,
+        h2 span {
+            color: #00d4ff;
+        }
+
+        .lead {
+            max-width: 920px;
+            font-size: 19px;
+            line-height: 2.1;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .nav a,
+        .back-link {
+            color: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(0, 212, 255, 0.18);
+            border-radius: 999px;
+            padding: 10px 16px;
+            text-decoration: none;
+            transition: color 0.25s, border-color 0.25s, background 0.25s;
+        }
+
+        .nav a:hover,
+        .back-link:hover {
+            color: #00d4ff;
+            border-color: rgba(0, 212, 255, 0.55);
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .doc-card {
+            padding: 28px;
+        }
+
+        .wide {
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            font-family: 'Titr', 'Titr', Tahoma, sans-serif;
+            font-size: 30px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 19px;
+            color: #00d4ff;
+            margin: 20px 0 8px;
+        }
+
+        p,
+        li {
+            font-size: 16px;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        ul {
+            padding-right: 22px;
+        }
+
+        .ability-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .ability-list li {
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 14px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.025);
+        }
+
+        .ability-list strong {
+            display: block;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            direction: ltr;
+        }
+
+        @media (max-width: 860px) {
+            .header {
+                position: absolute;
+                padding: 20px;
+            }
+
+            #clock {
+                font-size: 26px;
+            }
+
+            .page {
+                width: min(100% - 24px, 1180px);
+                padding-top: 112px;
+            }
+
+            .hero-card {
+                padding: 28px;
+            }
+
+            .grid,
+            .ability-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg"></div>
+    <div class="scanline"></div>
+
+    <header class="header">
+        <div class="brand">S<span>A</span>RAB</div>
+        <div class="header-right">
+            <div id="clock"></div>
+            <div class="version-tag">Honeypot Platform · v1.0</div>
+        </div>
+    </header>
+
+    <main class="page">
+        <section class="hero-card">
+            <div class="eyebrow">Sarab Documentation</div>
+            <h1>معرفی <span>سراب</span></h1>
+            <p class="lead">
+                سراب یک سکوی چند‌هانی‌پاته برای مشاهده، ثبت و تحلیل رفتار مهاجمان است. این سامانه سرویس‌های فریبنده را در قالب کانتینر اجرا می‌کند، رخدادها را در مسیر جمع‌آوری متمرکز قرار می‌دهد و با داشبوردها، نقشه حملات و ابزارهای تحلیل، دید عملیاتی سریعی از تهدیدهای واقعی اینترنتی فراهم می‌کند.
+            </p>
+            <nav class="nav">
+                <a href="#capabilities">قابلیت‌ها</a>
+                <a href="#honeypots">هانی‌پات‌ها</a>
+                <a href="#tools">ابزارهای تحلیلی</a>
+                <a href="architecture.html">مرور معماری</a>
+            </nav>
+        </section>
+
+        <section class="grid">
+            <article class="doc-card" id="capabilities">
+                <h2>سراب چه کمکی می‌کند؟</h2>
+                <ul>
+                    <li>جذب مهاجم با سرویس‌های شبیه‌سازی‌شده و کاهش نیاز به قرار دادن دارایی واقعی در معرض اینترنت.</li>
+                    <li>ثبت جزئیات نشست‌ها، اسکن‌ها، تلاش‌های ورود، payloadها، بدافزارها و الگوهای رفتاری برای تحلیل بعدی.</li>
+                    <li>نمایش رخدادها در Kibana، نقشه زنده حملات و نمای Elasticsearch برای جست‌وجو و شکار تهدید.</li>
+                    <li>ترکیب هانی‌پات‌ها با NSM برای دیدن هم‌زمان لاگ برنامه، متادیتای شبکه و هشدارهای ترافیکی.</li>
+                    <li>امکان انتخاب پروفایل نصب مثل استاندارد، سنسور، سبک، موبایل، تارپیت و سناریوهای مبتنی بر LLM.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card">
+                <h2>خروجی‌های ارزشمند برای کاربر</h2>
+                <ul>
+                    <li>فهرست IPهای مهاجم، کشور، پورت مقصد، سرویس هدف و زمان وقوع رخداد.</li>
+                    <li>نمونه credentialهای امتحان‌شده، فرمان‌های واردشده و فایل‌های دانلود یا بارگذاری‌شده.</li>
+                    <li>شناخت سرویس‌های بیشتر هدف‌گرفته‌شده در شبکه شما و اولویت‌بندی سخت‌سازی.</li>
+                    <li>داده قابل استفاده برای ساخت rule، dashboard، alert و گزارش‌های امنیتی.</li>
+                    <li>محیط آموزشی امن برای تیم‌های SOC، تحلیل بدافزار و پاسخ‌گویی به رخداد.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card wide" id="honeypots">
+                <h2>توانمندی‌های هانی‌پات‌ها در <span>سراب</span></h2>
+                <ul class="ability-list">
+                    <li><strong>ADBHoney</strong> رفتار مهاجمان Android Debug Bridge را ثبت می‌کند و برای مشاهده botnetهایی مفید است که دستگاه‌های اندرویدی یا IoT با ADB باز را جست‌وجو می‌کنند.</li>
+                    <li><strong>Beelzebub و Galah</strong> هانی‌پات‌های وب و LLM محور هستند و می‌توانند تعاملات هوشمندتر، درخواست‌های HTTP و تلاش‌های سوءاستفاده از برنامه‌های وب را آشکار کنند.</li>
+                    <li><strong>CiscoASA و CitrixHoneypot</strong> سطح حمله تجهیزات لبه، VPN و gatewayهای سازمانی را تقلید می‌کنند تا اسکن‌ها و exploitهای رایج این تجهیزات دیده شوند.</li>
+                    <li><strong>Conpot</strong> سرویس‌های صنعتی و OT مانند IEC104، IPMI و سناریوهای تجهیزات کنترلی را شبیه‌سازی می‌کند و برای پایش علاقه مهاجمان به زیرساخت صنعتی کاربرد دارد.</li>
+                    <li><strong>Cowrie</strong> هانی‌پات SSH و Telnet است؛ نام کاربری، گذرواژه، فرمان‌های shell، دانلود فایل و مسیرهای پس از ورود مهاجم را با جزئیات ثبت می‌کند.</li>
+                    <li><strong>DDoSPot، Endlessh، Go-Pot و HellPot</strong> نقش تارپیت و جذب‌کننده حملات حجمی یا اسکن‌های خودکار را دارند و زمان مهاجم را مصرف و الگوهای اتصال را ثبت می‌کنند.</li>
+                    <li><strong>DICOMPot و Medpot</strong> برای سرویس‌های پزشکی و تصویربرداری طراحی شده‌اند و تلاش برای شناسایی یا سوءاستفاده از سامانه‌های حوزه سلامت را نمایان می‌کنند.</li>
+                    <li><strong>Dionaea</strong> برای جمع‌آوری بدافزار و تعامل با پروتکل‌های آسیب‌پذیر رایج استفاده می‌شود و نمونه‌های ارسال‌شده توسط مهاجم را برای تحلیل ذخیره می‌کند.</li>
+                    <li><strong>ElasticPot، RedisHoneyPot و Log4Pot</strong> تلاش‌های هدف‌گیری Elasticsearch، Redis و الگوهای مرتبط با Log4Shell را ثبت می‌کنند و برای رصد سوءاستفاده از سرویس‌های داده‌ای مفیدند.</li>
+                    <li><strong>Heralding، Honeytrap، H0neytr4p و Honeypots</strong> مجموعه‌ای از سرویس‌های عمومی مثل FTP، HTTP، IMAP، POP3، RDP، SIP، SMTP و سایر درگاه‌ها را پوشش می‌دهند.</li>
+                    <li><strong>IPPHoney، MiniPrint و RDPHoneyPot</strong> سرویس‌های چاپگر، IPP و Remote Desktop را تقلید می‌کنند و اسکن‌های خودکار تجهیزات اداری و دسترسی راه دور را ثبت می‌کنند.</li>
+                    <li><strong>Mailoney، SentryPeer، Snare، Tanner و Wordpot</strong> حملات ایمیل، SIP/VoIP، وب‌اپلیکیشن و وردپرس را پوشش می‌دهند و برای تحلیل credential stuffing، probe و exploitهای وب کاربرد دارند.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card" id="tools">
+                <h2>ابزارهای همراه</h2>
+                <ul>
+                    <li><strong>Kibana:</strong> داشبوردهای جست‌وجو، فیلتر، نمودار و تحلیل رخدادهای ذخیره‌شده.</li>
+                    <li><strong>Attack Map:</strong> نمایش زنده مبدا حمله، مقصد، پروتکل و نوع هانی‌پات روی نقشه.</li>
+                    <li><strong>CyberChef:</strong> رمزگشایی، تبدیل، hash، فشرده‌سازی و تحلیل سریع داده‌های خام.</li>
+                    <li><strong>Elasticvue:</strong> مرور indexها، queryها و وضعیت Elasticsearch از طریق UI سبک.</li>
+                    <li><strong>SpiderFoot:</strong> جمع‌آوری OSINT و تکمیل زمینه درباره IP، دامنه و شاخص‌های تهدید.</li>
+                </ul>
+            </article>
+
+            <article class="doc-card">
+                <h2>پایش شبکه و امنیت</h2>
+                <ul>
+                    <li><strong>Suricata:</strong> موتور NSM/IDS برای تولید هشدارهای شبکه و تشخیص ترافیک مشکوک.</li>
+                    <li><strong>Fatt:</strong> استخراج fingerprint، متادیتای پروتکل و اطلاعات نشست از ترافیک زنده یا pcap.</li>
+                    <li><strong>P0f:</strong> fingerprint غیرفعال سیستم‌عامل و ویژگی‌های TCP بدون ایجاد ترافیک فعال.</li>
+                    <li><strong>Logstash:</strong> عادی‌سازی، برچسب‌گذاری و ارسال رخدادها به Elasticsearch.</li>
+                    <li><strong>NGINX:</strong> نقطه ورود امن برای UIها، reverse proxy و دسترسی مدیریت‌شده به ابزارها.</li>
+                </ul>
+            </article>
+        </section>
+
+        <div class="footer-actions">
+            <a class="back-link" href="../index.html">Back Home</a>
+            <a class="back-link" href="architecture.html">Architecture Review</a>
+        </div>
+    </main>
+</body>
+
+</html>
